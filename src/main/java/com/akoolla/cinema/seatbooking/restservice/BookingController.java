@@ -6,10 +6,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.akoolla.cinema.seatbooking.core.IBooking;
+import com.akoolla.cinema.seatbooking.core.IBookingRequest;
+import com.akoolla.cinema.seatbooking.core.IBookingService;
+import com.akoolla.cinema.seatbooking.core.IScreening;
+import com.akoolla.cinema.seatbooking.core.ScreeningIsFullyBookedException;
+import com.akoolla.cinema.seatbooking.core.impl.BookingRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
 public class BookingController implements IBookingController {
+    
+    //TODO: Need to wire one of these up via something like mongo
+    private IBookingService bookingService;
 
 	@RequestMapping("/screening/{screeningRef}")
 	@ResponseBody
@@ -62,20 +71,36 @@ public class BookingController implements IBookingController {
 	@RequestMapping("/screening/{screening.ref}/book")
 	@ResponseBody
 	@Override
-	public String makeBooking(@RequestParam("json.wrf") String jsonToken, @PathVariable("screening.ref")  String screeningRef, 
-			@RequestParam(name="isMember",required=false) boolean isMember, @RequestParam("standard") String numStandardSeats, 
-			@RequestParam("concessions") String numConcessionSeats,
-			@RequestParam("wheelchairs") String numOfWheelChairs, @RequestParam("bookedName") String name) throws JsonProcessingException {
-		
-		// TODO Needs to do real creation of booking etc..
-		SeatBookingResponse response = new SeatBookingResponse(jsonToken);
-		response.addOutput("bookingRef", "213213213");
-		response.addOutput("priceInPence", 1250);
-		response.addOutput("screeningName", "What we do in the Shadows");
-		response.addOutput("screeningRating", "15");
-		response.addOutput("screeningDateAndTime", "Friday, April 1st 8:30pm");
-		
-		return response.writeValueAsString();
+	public String makeBooking(
+	        @RequestParam("json.wrf") String jsonToken, 
+	        @PathVariable("screening.ref")  String screeningRef, 
+			@RequestParam(name="isMember",required=false) boolean isMember, 
+			@RequestParam("standard") int numStandardSeats, 
+			@RequestParam("concessions") int numConcessionSeats,
+			@RequestParam("wheelchairs") int numOfWheelChairs, 
+			@RequestParam("bookedName") String name) throws JsonProcessingException {
+	    
+	    IBookingRequest bookingRequest = new BookingRequest(name, "TODO", numStandardSeats, numConcessionSeats, numOfWheelChairs);
+	    IScreening screening = bookingService.findScreening(screeningRef);
+	    
+	    try {
+            IBooking booking = screening.createBooking(bookingRequest);
+            
+            // TODO Needs to do real creation of booking etc..
+            SeatBookingResponse response = new SeatBookingResponse(jsonToken);
+            response.addOutput("bookingRef", booking.getBookingReference().toString());
+            response.addOutput("priceInPence", 1250); //TODO: Get booking cost
+            response.addOutput("screeningName", screening.getFilm().getName());
+            response.addOutput("screeningRating", screening.getFilm().getRating());
+            response.addOutput("screeningDateAndTime", screening.getScreeningTime()); //TODO: Nicer formatting of time
+
+            return response.writeValueAsString();
+            
+        } catch (ScreeningIsFullyBookedException e) {
+            //TODO: Send REST error http status - could do something with the reponse too...
+        }
+	    
+	    return ""; //TODO
 	}
 	
 	@RequestMapping("/booking/cancel")
