@@ -89,7 +89,7 @@ public class BookingController implements IBookingController {
             // TODO Needs to do real creation of booking etc..
             SeatBookingResponse response = new SeatBookingResponse(jsonToken);
             response.addOutput("bookingRef", booking.getBookingReference().toString());
-            response.addOutput("priceInPence", 1250); //TODO: Get booking cost
+            response.addOutput("priceInPence", screening.getCostOfBookingInPence(booking)); //TODO: Get booking cost
             response.addOutput("screeningName", screening.getFilm().getName());
             response.addOutput("screeningRating", screening.getFilm().getRating());
             response.addOutput("screeningDateAndTime", screening.getScreeningTime()); //TODO: Nicer formatting of time
