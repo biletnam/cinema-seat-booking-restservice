@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.mongojack.DBCursor;
 import org.mongojack.JacksonDBCollection;
+import org.mongojack.WriteResult;
 import org.mongojack.internal.MongoJackModule;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,6 @@ public class BookingService implements IBookingService {
 	private final ObjectMapper mapper;
 	private final JacksonDBCollection<Screening, String> screeningCollection;
 	
-	@SuppressWarnings("deprecation")
     public BookingService(
 	        @Value("${mongo.host}") String mongoHost,
 	        @Value("${mongo.db.name}") String dbName,
@@ -72,8 +72,16 @@ public class BookingService implements IBookingService {
 	}
 
 	@Override
-	public void createScreening(IScreening screening) throws IllegalArgumentException {
-	    screeningCollection.insert((Screening) screening);
+	public IScreening createScreening(IScreening screening) throws IllegalArgumentException {
+	    WriteResult<Screening,String> result = screeningCollection.insert((Screening) screening);
+	    
+	    if(result != null && result.getWriteResult().getError() != null){
+	        return result.getSavedObject();
+	    } else {
+	        new IllegalAccessException( result.getWriteResult().getError());
+	    }
+	    
+	    return null;
 	}
 
 	@Override

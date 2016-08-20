@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Set;
 
 import org.joda.time.DateTime;
-import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +51,7 @@ public class ScreeningPersistenceTest {
         
         for(IScreening persistedScreening : screenings){
             screening = persistedScreening;
+            assertNotNull("ID", persistedScreening.get_id());
             assertNotNull("Film", persistedScreening.getFilm());
             assertEquals("Top Gun", persistedScreening.getFilm().getName());
             //assertEquals(reference, persistedScreening.getFilm().getUniqueReference());
@@ -61,8 +61,22 @@ public class ScreeningPersistenceTest {
         }
     }
     
-    @After
-    public void clearTestCollections(){
-        ((BookingService)bookingService).getDb().dropDatabase();
-    }
+//    @Test
+//    public void ShouldBeAbleToMakeANewBookingOnAPersistedScreening() throws Exception {
+//        DateTime bookingDate = new DateTime(2012, 1, 1, 1, 0);
+//        String reference = "awdadawd";
+//
+//        IScreening screening = new Screening(bookingDate,new Film(reference, "Top Gun", ""), 23);
+//        bookingService.createScreening(screening);
+//        
+//        screening = bookingService.findScreening(reference);
+//        
+//        IBooking booking = bookingService.updateScreening(screening.get_id(), new BookingRequest("", "", 23));
+//        assertNotNull(booking);
+//    }
+//    
+//    @After
+//    public void clearDownCollections(){
+//        ((BookingService)bookingService).getDb().dropDatabase();
+//    }
 }

@@ -34,7 +34,7 @@ configurations {
 
 dependencies {
 	compile('com.fasterxml.jackson.datatype:jackson-datatype-joda:2.2.3')
-	compile('org.mongodb:mongo-java-driver:2.6.5')
+	compile('org.mongodb:mongo-java-driver:2.13.3')
 	compile('org.mongojack:mongojack:2.3.0')
 	compile('org.springframework.boot:spring-boot-starter-web')
     compile("org.springframework.boot:spring-boot-starter-jetty")
