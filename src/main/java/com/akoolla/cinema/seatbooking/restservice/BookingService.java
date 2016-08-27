@@ -1,4 +1,4 @@
-package com.akoolla.cinema.seatbooking.core.impl;
+package com.akoolla.cinema.seatbooking.restservice;
 
 import java.net.UnknownHostException;
 import java.util.HashSet;
@@ -9,6 +9,7 @@ import org.mongojack.DBCursor;
 import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
 import org.mongojack.internal.MongoJackModule;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import com.akoolla.cinema.seatbooking.core.IBookingRequest;
 import com.akoolla.cinema.seatbooking.core.IBookingService;
 import com.akoolla.cinema.seatbooking.core.IScreening;
 import com.akoolla.cinema.seatbooking.core.ScreeningIsFullyBookedException;
+import com.akoolla.cinema.seatbooking.core.impl.Screening;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
@@ -34,6 +36,7 @@ public class BookingService implements IBookingService {
 	private final ObjectMapper mapper;
 	private final JacksonDBCollection<Screening, String> screeningCollection;
 	
+	@Autowired
     public BookingService(
 	        @Value("${mongo.host}") String mongoHost,
 	        @Value("${mongo.db.name}") String dbName,
