@@ -92,6 +92,8 @@ public class BookingController implements IBookingController {
             response.addOutput("screeningName", info.getFilmTitle());
             response.addOutput("screeningRating", info.getRating());
             response.addOutput("screeningDateAndTime", info.getDateTime());
+            response.addOutput("seatsBooked", booking.getNumberOfSeats());
+            response.addOutput("wheelChairsBooked", booking.getNumberOfWheelChairs());
 
             return response.writeValueAsString();
 
