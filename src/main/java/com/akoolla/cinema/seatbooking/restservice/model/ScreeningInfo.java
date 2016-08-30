@@ -102,4 +102,13 @@ public class ScreeningInfo {
     public int getAvailableWheelChairSpaces() {
         return availableWheelChairSpaces;
     }
+
+    /**
+     * TODO.
+     * 
+     * @return
+     */
+    public boolean isFullyBooked() {
+        return availableSeats == 0 && availableWheelChairSpaces == 0;
+    }
 }

@@ -12,3 +12,8 @@ jack still works with appropriate version of mongo as some methods on the java d
 and jack still needs them...investigate!
 * Security, decide which methods need security, implement something like oauth to give service some security, let the client
 applications work on there bit.
+
+
+sudo apt-get install -y mongodb-org=2.6.9 mon	godb-org-server=2.6.9 mongodb-org-shell=2.6.9 mongodb-org-mongos=2.6.9 mongodb-org-tools=2.6.9
+https://docs.mongodb.com/v2.6/tutorial/install-mongodb-on-ubuntu/#install-mongodb
+
