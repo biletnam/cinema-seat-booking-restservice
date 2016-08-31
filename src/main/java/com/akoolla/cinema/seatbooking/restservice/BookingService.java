@@ -14,10 +14,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.akoolla.cinema.seatbooking.core.IBooking;
+import com.akoolla.cinema.seatbooking.core.IBookingReference;
 import com.akoolla.cinema.seatbooking.core.IBookingRequest;
 import com.akoolla.cinema.seatbooking.core.IBookingService;
 import com.akoolla.cinema.seatbooking.core.IScreening;
 import com.akoolla.cinema.seatbooking.core.ScreeningIsFullyBookedException;
+import com.akoolla.cinema.seatbooking.core.impl.BookingReference;
 import com.akoolla.cinema.seatbooking.core.impl.Screening;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -122,13 +124,33 @@ public class BookingService implements IBookingService {
         return db;
     }
 
-
-    /**
-     * @param arg0
-     * @see com.akoolla.cinema.seatbooking.core.IBookingService#cancelABooking(com.akoolla.cinema.seatbooking.core.IBooking)
-     */
     @Override
-    public void cancelABooking(IBooking arg0) {
-        throw new UnsupportedOperationException();
+    public void cancelABooking(String bookingRef) throws IllegalArgumentException {
+        //TODO: Use mongo querying to find screening with actual booking...
+        IBooking foundBooking = null;
+        IScreening foundScreening = null;
+        IBookingReference toDelete = new BookingReference(bookingRef);
+        
+        
+        for(IScreening screening : findAllScreenings()){
+            if(foundBooking != null) {
+                break;
+            }
+            
+            for(IBooking booking : screening.listBookings()){
+                if(booking.getBookingReference().toString().equals(toDelete.toString())){
+                    foundBooking = booking;
+                    foundScreening = screening;
+                    break;
+                }
+            }
+        }
+        
+        if(foundBooking == null){
+            throw new UnsupportedOperationException("Could not find booking with ref:"+ bookingRef);
+        } else {
+            foundScreening.cancelBooking(foundBooking);
+            screeningCollection.updateById(foundScreening.get_id(),(Screening)foundScreening);
+        }
     }
 }

@@ -21,7 +21,7 @@ public class ScreeningDateFormatTest {
 
     @Test
     public void dateIsCorrectlyFormattedInString() throws Exception {
-        DateTime screeningTime = new DateTime(2016, 9, 15, 20, 0, DateTimeZone.getDefault());
+        DateTime screeningTime = new DateTime(2016, 9, 15, 20, 30, DateTimeZone.getDefault());
         
         IFilm film = mock(IFilm.class);
         when(film.getReleaseDate()).thenReturn(new DateTime());
@@ -32,6 +32,6 @@ public class ScreeningDateFormatTest {
         
         
         ScreeningInfo info = new ScreeningInfo(screening);
-        assertEquals("Thursday, September.15 8PM", info.getDateTime());
+        assertEquals("Thursday, September.15 8:30PM", info.getDateTime());
     }
 }

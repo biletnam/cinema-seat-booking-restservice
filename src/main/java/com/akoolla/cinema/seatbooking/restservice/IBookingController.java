@@ -19,4 +19,6 @@ public interface IBookingController {
 	String cancelBooking(String jsonToken, String bookingRef) throws JsonProcessingException;
 
     String listScreenings(String jsonToken) throws JsonProcessingException;
+    
+    String getBookings(String jsonToken,String screeningRef) throws JsonProcessingException ;
 }

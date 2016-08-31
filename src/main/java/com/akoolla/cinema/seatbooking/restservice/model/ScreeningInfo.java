@@ -12,7 +12,7 @@ import com.akoolla.cinema.seatbooking.core.film.IFilm;
  * Model portion of the MVC element of a screening
  * @author richardTiffin
  */
-public class ScreeningInfo {
+public class ScreeningInfo implements Comparable<ScreeningInfo>{
     private final String ref;
     private final String dateTime;
     private final String filmTitle;
@@ -23,6 +23,7 @@ public class ScreeningInfo {
     private final String description;
     private final int availableSeats;
     private final int availableWheelChairSpaces;
+    private final DateTime screeningTime;
 
     public ScreeningInfo(IScreening screening){
         this.dateTime = formatScreeningDateTime(screening.getScreeningTime());
@@ -40,6 +41,7 @@ public class ScreeningInfo {
             this.description = film.getDescription();
             this.availableSeats = screening.getNumberOfBookableSeats(SEAT_TYPE.STANDARD) - screening.getNumberOfBookedSeats(SEAT_TYPE.STANDARD);
             this.availableWheelChairSpaces = screening.getNumberOfBookableSeats(SEAT_TYPE.WHEELCHAIR) - screening.getNumberOfBookedSeats(SEAT_TYPE.WHEELCHAIR);
+            this.screeningTime = screening.getScreeningTime();
         } 
     }
 
@@ -81,7 +83,7 @@ public class ScreeningInfo {
      * @return Formats date time into string similar to Thursday, Sept.15th 8pm & Friday, Sept. 16th 8:30pm.
      */
     private String formatScreeningDateTime(DateTime screeningTime){ //TODO Format!
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE, MMMM.dd Ka");
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("EEEE, MMMM.dd K:mma");
         return screeningTime.toString(fmt);
     }
 
@@ -111,4 +113,22 @@ public class ScreeningInfo {
     public boolean isFullyBooked() {
         return availableSeats == 0 && availableWheelChairSpaces == 0;
     }
+
+    /**
+     * Return the screeningTime.
+     *
+     * @return the screeningTime
+     */
+    protected DateTime getScreeningTime() {
+        return screeningTime;
+    }
+
+    /**
+     * @param o
+     * @return
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(ScreeningInfo o) {
+        return getScreeningTime().compareTo(o.getScreeningTime());}
 }
