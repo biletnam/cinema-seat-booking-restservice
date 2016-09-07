@@ -17,6 +17,8 @@ public class BookingInfo {
     private String date;
     private int seats;
     private int wheelchairs;
+    private String email;
+    private String telNo;
     
     /**
      * @param booking
@@ -27,6 +29,8 @@ public class BookingInfo {
         this.date = formatScreeningDateTime(booking.dateOfBooking());
         this.seats = booking.getNumberOfSeats();
         this.wheelchairs = booking.getNumberOfWheelChairs();
+        this.email = booking.getCustomer().getEmail();
+        this.telNo = booking.getCustomer().getContactNumber();
     }
     
     
@@ -87,6 +91,26 @@ public class BookingInfo {
      */
     public int getWheelchairs() {
         return wheelchairs;
+    }
+
+
+    /**
+     * Return the email.
+     *
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+
+    /**
+     * Return the telNo.
+     *
+     * @return the telNo
+     */
+    public String getTelNo() {
+        return telNo;
     }
 
 }

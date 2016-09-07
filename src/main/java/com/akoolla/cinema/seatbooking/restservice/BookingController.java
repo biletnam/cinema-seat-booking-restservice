@@ -106,7 +106,7 @@ public class BookingController implements IBookingController {
             @RequestParam("bookedName") String name,
             @RequestParam("email") String email) throws JsonProcessingException {
 
-        IBookingRequest bookingRequest = new BookingRequest(name, email, numStandardSeats, numOfWheelChairs);
+        IBookingRequest bookingRequest = new BookingRequest(name, email, numStandardSeats, numOfWheelChairs, "TODO");
         IScreening screening = bookingService.findScreening(screeningRef);
         ScreeningInfo info = new ScreeningInfo(screening);
 
@@ -151,25 +151,16 @@ public class BookingController implements IBookingController {
     @PostConstruct
     public void setUpDemo() {
         // TODO: Just for testing purposes...
-        DateTime screeningTime = new DateTime(2016, 9, 15, 20, 0, DateTimeZone.UTC);
+        DateTime screeningTime = new DateTime(2016, 9, 16, 20, 30, DateTimeZone.UTC);
         Film film = new Film(UUID.randomUUID().toString(), 
-                "Hail Ceaser", 
+                "Hail Caesar", 
                 "", 
                 "12A", 
                 new DateTime(2016, 3, 4, 0, 0), 106,
                 "USA");
         bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
         
-        screeningTime = new DateTime(2016, 9, 23, 20, 30, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "Anomalisa", 
-                "", 
-                "15", 
-                new DateTime(2016, 3, 4, 0, 0), 90,
-                "USA");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 9, 30, 20, 30, DateTimeZone.UTC);
+        screeningTime = new DateTime(2016, 9, 29, 20, 00, DateTimeZone.UTC);
         film = new Film(UUID.randomUUID().toString(), 
                 "Florence Foster Jenkins", 
                 "", 
@@ -177,143 +168,6 @@ public class BookingController implements IBookingController {
                 new DateTime(2016, 3, 4, 0, 0), 108,
                 "UK");
         bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 10, 2, 15, 00, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "Wear Your Pants with Pride", 
-                "", 
-                "Suitable for all ages", 
-                new DateTime(2016, 3, 4, 0, 0), 60,
-                "Nutty Noah");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 10, 7, 20, 30, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "The Assassin", 
-                "", 
-                "12A", 
-                new DateTime(2015, 3, 4, 0, 0), 106,
-                "Taiwan");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 10, 8, 19, 30, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "Northern Soul Night in Axbridge Town Hall", 
-                "", 
-                "", 
-                new DateTime(2016, 3, 4, 0, 0), 210,
-                "");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 10, 14, 20, 30, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "Victoria", 
-                "", 
-                "15", 
-                new DateTime(2015, 3, 4, 0, 0), 135,
-                "Germany");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 10, 20, 20, 00, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "High Rise", 
-                "", 
-                "PG", 
-                new DateTime(2015, 3, 4, 0, 0), 106,
-                "UK");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 10, 21, 20, 30, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "High Rise", 
-                "", 
-                "PG", 
-                new DateTime(2015, 3, 4, 0, 0), 106,
-                "UK");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 10, 28, 20, 30, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "The Ecstasy of Wilko Johnson", 
-                "", 
-                "15", 
-                new DateTime(2015, 3, 4, 0, 0), 92,
-                "UK");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 11, 4, 20, 30, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "You’ve Been Trumped", 
-                "", 
-                "PG", 
-                new DateTime(2012, 3, 4, 0, 0), 101,
-                "UK");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 11, 11, 20, 30, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "The Jungle Book", 
-                "", 
-                "PG", 
-                new DateTime(2016, 3, 4, 0, 0), 104,
-                "USA/UK");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 11, 17, 20, 00, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "Love and Friendship", 
-                "", 
-                "U", 
-                new DateTime(2016, 3, 4, 0, 0), 92,
-                "UK");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 11, 18, 20, 30, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(),
-                "Love and Friendship", 
-                "", 
-                "U", 
-                new DateTime(2016, 3, 4, 0, 0), 92,
-                "UK");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 11, 25, 20, 30, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "Room", 
-                "", 
-                "15", 
-                new DateTime(2016, 3, 4, 0, 0), 118,
-                "USA");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 12, 2, 20, 30, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "The Revenant", 
-                "", 
-                "PG", 
-                new DateTime(2016, 3, 4, 0, 0), 153,
-                "USA");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 12, 8, 20, 00, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "Eddie the Eagle", 
-                "", 
-                "PG", 
-                new DateTime(2016, 3, 4, 0, 0), 103,
-                "UK");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        screeningTime = new DateTime(2016, 12, 9, 20, 30, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "Eddie the Eagle", 
-                "", 
-                "PG", 
-                new DateTime(2016, 3, 4, 0, 0), 103,
-                "UK");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
-        
-        
     }
 
     @PreDestroy
