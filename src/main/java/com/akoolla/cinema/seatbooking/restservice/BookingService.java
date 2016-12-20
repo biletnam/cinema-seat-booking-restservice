@@ -4,7 +4,10 @@ import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.joda.time.DateTime;
 import org.mongojack.DBCursor;
 import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
@@ -152,5 +155,23 @@ public class BookingService implements IBookingService {
             foundScreening.cancelBooking(foundBooking);
             screeningCollection.updateById(foundScreening.get_id(),(Screening)foundScreening);
         }
+    }
+
+
+    /**
+     * @param from
+     * @return
+     * @see com.akoolla.cinema.seatbooking.core.IBookingService#findAvailableScreenings(org.joda.time.DateTime)
+     */
+    @Override
+    public Set<IScreening> findAvailableScreenings(DateTime from) {
+        Set<IScreening> available = new HashSet<>();
+        
+        Stream<IScreening> availableScreenigns = findAllScreenings().stream().filter(s -> s.getScreeningTime().isAfter(from));
+        for(IScreening screening : availableScreenigns.collect(Collectors.toList())){
+            available.add(screening);
+        }
+        
+        return available;
     }
 }

@@ -35,4 +35,12 @@ public class ShowBookingsTest {
         assertEquals(bookingInfo.getName(), "Fred");
         
     }
+    
+    @Test
+    public void canShowOnlyBookingsInTheFuture() throws Exception {
+        
+        
+        
+        
+    }
 }

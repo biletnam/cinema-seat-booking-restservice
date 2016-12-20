@@ -2,6 +2,7 @@ package com.akoolla.cinema.seatbooking.restservice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -11,6 +12,8 @@ import javax.annotation.PreDestroy;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +25,7 @@ import com.akoolla.cinema.seatbooking.core.IBooking;
 import com.akoolla.cinema.seatbooking.core.IBookingRequest;
 import com.akoolla.cinema.seatbooking.core.IBookingService;
 import com.akoolla.cinema.seatbooking.core.IScreening;
+import com.akoolla.cinema.seatbooking.core.IScreening.SEAT_TYPE;
 import com.akoolla.cinema.seatbooking.core.ScreeningIsFullyBookedException;
 import com.akoolla.cinema.seatbooking.core.film.Film;
 import com.akoolla.cinema.seatbooking.core.impl.BookingRequest;
@@ -48,6 +52,21 @@ public class BookingController implements IBookingController {
     @ResponseBody
     @Override
     public String listScreenings(@RequestParam("json.wrf") String jsonToken) throws JsonProcessingException {
+        SeatBookingResponse response = new SeatBookingResponse(jsonToken);
+
+        Set<ScreeningInfo> screenings = new TreeSet<>();
+        bookingService.findAvailableScreenings(DateTime.now(DateTimeZone.UTC)).forEach(s -> {
+            screenings.add(new ScreeningInfo(s));
+        });
+        response.addOutput("screenings", screenings);
+
+        return response.writeValueAsString();
+    }
+    
+    @RequestMapping("/screening/all/")
+    @ResponseBody
+    @Override
+    public String listAllScreenings(@RequestParam("json.wrf") String jsonToken) throws JsonProcessingException {
         SeatBookingResponse response = new SeatBookingResponse(jsonToken);
 
         Set<ScreeningInfo> screenings = new TreeSet<>();
@@ -91,6 +110,10 @@ public class BookingController implements IBookingController {
             });
             
             response.addOutput("bookings", bookings);
+            response.addOutput("filmName", screening.getFilm().getName());
+            response.addOutput("numOfBookedSeats", screening.getNumberOfBookedSeats(SEAT_TYPE.STANDARD));
+            response.addOutput("numOfBookedWheelChairs", screening.getNumberOfBookedSeats(SEAT_TYPE.WHEELCHAIR));
+            
             return response.writeValueAsString();
         }
     }
@@ -147,31 +170,50 @@ public class BookingController implements IBookingController {
             throw new IllegalArgumentException();
         }
     }
+    
+    @RequestMapping("/screening/add/")
+    @ResponseBody
+    @Override
+    public String createScreening(@RequestParam("json.wrf") String jsonToken,
+            @RequestParam("name") String filmName,
+            @RequestParam("date") String screeningTime,
+            @RequestParam("rating") String rating,
+            @RequestParam("releaseDate") String releaseDate,
+            @RequestParam("length") int length,
+            @RequestParam("country") String country,
+            @RequestParam("maxSeats") int maxSeats,
+            @RequestParam("maxWheelChairs") int maxWheelChairs) throws JsonProcessingException{
+        
+        String dateFormat = "dd-MM-yyyy-H-mm";
+        DateTimeFormatter fmt = DateTimeFormat.forPattern(dateFormat).withZoneUTC().withLocale(Locale.UK);
+        
+        DateTime ofScreening = fmt.parseDateTime(screeningTime);
+        DateTime screeningReleaseDate = fmt.parseDateTime(releaseDate);
+        
+        Film film = new Film(UUID.randomUUID().toString(), 
+                filmName, 
+                "", 
+                rating, 
+                screeningReleaseDate, 
+                length, 
+                country);
+        
+        IScreening created = bookingService.createScreening(new Screening(ofScreening, film, maxSeats, maxWheelChairs));
+        
+        SeatBookingResponse response = new SeatBookingResponse(jsonToken);
+        response.addOutput("message", "Added");
+        response.addOutput("screening", created);
+        
+        return response.writeValueAsString();
+    }
 
     @PostConstruct
     public void setUpDemo() {
-        // TODO: Just for testing purposes...
-        DateTime screeningTime = new DateTime(2016, 9, 16, 20, 30, DateTimeZone.UTC);
-        Film film = new Film(UUID.randomUUID().toString(), 
-                "Hail Caesar", 
-                "", 
-                "12A", 
-                new DateTime(2016, 3, 4, 0, 0), 106,
-                "USA");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
         
-        screeningTime = new DateTime(2016, 9, 29, 20, 00, DateTimeZone.UTC);
-        film = new Film(UUID.randomUUID().toString(), 
-                "Florence Foster Jenkins", 
-                "", 
-                "PG", 
-                new DateTime(2016, 3, 4, 0, 0), 108,
-                "UK");
-        bookingService.createScreening(new Screening(screeningTime, film, 32, 2));
     }
 
     @PreDestroy
     public void clearDemo() throws Exception {
-        ((BookingService) bookingService).getDb().dropDatabase();
+        //((BookingService) bookingService).getDb().dropDatabase();
     }
 }
