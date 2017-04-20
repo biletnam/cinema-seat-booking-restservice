@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.org.cse</groupId>
 	<artifactId>cinema-seat-booking-rest</artifactId>
-	<version>1.4.0-RELEASE</version>
+	<version>1.5.0-RELEASE</version>
 	<name>Cinema Seat Booking - REST webservice</name>
 
 	<dependencies>
@@ -54,7 +54,7 @@
 		<dependency>
 			<groupId>com.akoolla</groupId>
 			<artifactId>cinema.seatbooking.core</artifactId>
-			<version>1.1.0-RELEASE</version>
+			<version>1.2.0-RELEASE</version>
 		</dependency>
 	</dependencies>
 

@@ -182,38 +182,30 @@ public class BookingController implements IBookingController {
             @RequestParam("length") int length,
             @RequestParam("country") String country,
             @RequestParam("maxSeats") int maxSeats,
-            @RequestParam("maxWheelChairs") int maxWheelChairs) throws JsonProcessingException{
+            @RequestParam("maxWheelChairs") int maxWheelChairs,
+            @RequestParam(defaultValue="false",required=false,value="cannotBook") boolean cannotBook, 
+            @RequestParam(defaultValue="",required=false,value="filmDescription") String filmDescription) throws JsonProcessingException, IllegalArgumentException, IllegalAccessException{
         
         String dateFormat = "dd-MM-yyyy-H-mm";
         DateTimeFormatter fmt = DateTimeFormat.forPattern(dateFormat).withZoneUTC().withLocale(Locale.UK);
-        
+                
         DateTime ofScreening = fmt.parseDateTime(screeningTime);
         DateTime screeningReleaseDate = fmt.parseDateTime(releaseDate);
         
         Film film = new Film(UUID.randomUUID().toString(), 
                 filmName, 
-                "", 
+                filmDescription, 
                 rating, 
                 screeningReleaseDate, 
                 length, 
                 country);
         
-        IScreening created = bookingService.createScreening(new Screening(ofScreening, film, maxSeats, maxWheelChairs));
-        
+        IScreening created =  bookingService.createScreening(new Screening(ofScreening, film, maxSeats, maxWheelChairs, cannotBook));
+                
         SeatBookingResponse response = new SeatBookingResponse(jsonToken);
         response.addOutput("message", "Added");
         response.addOutput("screening", created);
         
         return response.writeValueAsString();
-    }
-
-    @PostConstruct
-    public void setUpDemo() {
-        
-    }
-
-    @PreDestroy
-    public void clearDemo() throws Exception {
-        //((BookingService) bookingService).getDb().dropDatabase();
     }
 }

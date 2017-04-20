@@ -24,6 +24,7 @@ public class ScreeningInfo implements Comparable<ScreeningInfo>{
     private final int availableSeats;
     private final int availableWheelChairSpaces;
     private final DateTime screeningTime;
+    private final boolean isBookable;
 
     public ScreeningInfo(IScreening screening){
         this.dateTime = formatScreeningDateTime(screening.getScreeningTime());
@@ -42,6 +43,7 @@ public class ScreeningInfo implements Comparable<ScreeningInfo>{
             this.availableSeats = screening.getNumberOfBookableSeats(SEAT_TYPE.STANDARD) - screening.getNumberOfBookedSeats(SEAT_TYPE.STANDARD);
             this.availableWheelChairSpaces = screening.getNumberOfBookableSeats(SEAT_TYPE.WHEELCHAIR) - screening.getNumberOfBookedSeats(SEAT_TYPE.WHEELCHAIR);
             this.screeningTime = screening.getScreeningTime();
+            this.isBookable = !screening.cannotBook();
         } 
     }
 
@@ -77,6 +79,9 @@ public class ScreeningInfo implements Comparable<ScreeningInfo>{
         return ref;
     }
     
+    public boolean isBookable() {
+        return isBookable;
+    }
     
     /**
      * @param screeningTime
@@ -131,4 +136,5 @@ public class ScreeningInfo implements Comparable<ScreeningInfo>{
     @Override
     public int compareTo(ScreeningInfo o) {
         return getScreeningTime().compareTo(o.getScreeningTime());}
+
 }
